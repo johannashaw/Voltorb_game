@@ -25,7 +25,6 @@ void initRandom()
 
 int GetRandom()
 {
-	
 	return random();
 }
 
@@ -40,28 +39,8 @@ int GetRandomMinMax(int min, int max)
 }
 
 
-/*	For writing to the EEPROM
-	* 12.4.2
-	* page 33
 
-// This bit will write to EEPROM
-char cSREG;
-cSREG = SREG; // store SREG value
-// disable interrupts during timed sequence
-_CLI();
-EECR |= (1<<EEMPE); // start EEPROM write
-EECR |= (1<<EEPE);
-SREG = cSREG; // restore SREG value (I-bit) 
-
-
-
-*/
-
-// For the EEPROM write operation, the EEDR Register contains the data to be written to the EEPROM in
-// the address given by the EEAR Register. For the EEPROM read operation, the EEDR contains the data
-// read out from the EEPROM at the address given by EEAR.
-
-
+/* The following two functions were provided to my by the ATmega328/P Datasheet: */
 
 void EEPROM_write(unsigned int uiAddress, unsigned char ucData)
 {
@@ -75,7 +54,9 @@ void EEPROM_write(unsigned int uiAddress, unsigned char ucData)
 	EECR |= (1<<EEMPE);
 	/* Start eeprom write by setting EEPE */
 	EECR |= (1<<EEPE);
-}unsigned char EEPROM_read(unsigned int uiAddress)
+}
+
+unsigned char EEPROM_read(unsigned int uiAddress)
 {
 	/* Wait for completion of previous write */
 	while(EECR & (1<<EEPE))
@@ -86,4 +67,4 @@ void EEPROM_write(unsigned int uiAddress, unsigned char ucData)
 	EECR |= (1<<EERE);
 	/* Return data from Data Register */
 	return EEDR;
-}
+}
