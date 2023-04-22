@@ -9,4 +9,4 @@ The PCB was designed to incorperates a 5x5 button matrix and have the game displ
 The Software component was designed to be used with the ATmega328P-P microchip and the SSD1306 OLED.
 
 
-
+SSD1306, I2C, timer, atd, and sci libraries were all provided to me by Simon Walker.
