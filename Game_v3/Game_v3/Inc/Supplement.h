@@ -2,10 +2,11 @@
  * Supplement.h
  *
  * Created: 2023-04-15 8:56:32 PM
- *  Author: Johanna
+ * Author:	Johanna Shaw
  
- * Purpose: to define different random functions for the game-play to use while 
- *			creating the game board
+ * Purpose: To define different random functions for the game-play to use while 
+			creating the game board.
+			This is in a separate library to allow for easier changes in mediums.
  */ 
 
 
@@ -24,6 +25,8 @@ int GetRandomMax(int max);
 // returns a random int from min to max
 int GetRandomMinMax(int min, int max);
 
-//
+
+// functions for reading and writing from EEPROM
+// taken directly from the ATmega328/P Datasheet
 void EEPROM_write(unsigned int uiAddress, unsigned char ucData);
 unsigned char EEPROM_read(unsigned int uiAddress);

@@ -2,7 +2,9 @@
  * Game_v3.c
  *
  * Created: 3/31/2023 1:38:12 PM
- * Author : jshaw46
+ * Author : Johanna Shaw
+ * Description :	The main file for the Voltorb game. Will handle button callbacks, and OLED displays for things that
+					are game specific and require multiple GamePlay pointers.
  */ 
 #ifndef F_CPU
 #define F_CPU 2E6 // with external xtal enabled, and clock div/8, bus == 2MHz
@@ -22,6 +24,8 @@
 #ifndef IndicatorLed_B
 #define IndicatorLed_B 0b00000010		// #define IndicatorLed PORTB1
 #endif
+
+// Macros to be uncommented when testing and debugging respectively.
 
 //#ifndef TESTING
 //#define TESTING
@@ -89,38 +93,38 @@ int main(void)
 	Level =GetLevel_pt();
 	LevelPoints = GetLevelPoints_pt();
 
+	// initialize the game.
 	Boardinit();
 	
 	#ifdef TESTING
 	TestGame();		// initialize the buttons and set buttonPressed and held callback functions	ButtonsSetup(&ButtonPressed, &ButtonHeld);
 	#endif
 	
-	#ifndef TESTING	GameInitUI();	// initialize the buttons and set buttonPressed and held callback functions	ButtonsSetup(&StartGame, &ButtonHeld);		#endif
+	#ifndef TESTING	// display the title screen on the OLED	GameInitUI();		// initialize the buttons and set buttonPressed and button_held callback functions	// StartGame will get called when a button is first pressed, (this gets reassigned after title screen is displayed)	// ButtonHeld will be called when a button is pressed for 2 seconds	ButtonsSetup(&StartGame, &ButtonHeld);		#endif
 	
-	
-	// indicator led setup (this is now done in the Button Setup)
-	//DDRB |= IndicatorLed_B;
-	//DDRB |= 1 << PORTB1;
-	
+		
 	// main program loop - don't exit
 	while(1)
 	{
+		// current version is running based on delays, may change to interrupts later.
 		_delay_ms(100);
 				
+		// toggle the led, inicating game is running
 		PINB = IndicatorLed_B;
 		
-		//if ((PIND & (COL1_D | COL2_D | COL3_D | COL4_D)) | (COL5_B & PINB))
+		// Does checks of each the 25 game buttons. Will pass the row and column to 
+		// the respective callback funtions if a button is pressed or held for 2 seconds
 		CheckButtons();
 	}
 }
 
 //****************************************************************************
 //								Function Declarations:
-//****************************************************************************// A button was pressed, do something with that information.void ButtonPressed(int row, int col){	char output[30];		char retval = TryReveal(row, col);			#ifdef DEBUG_MAIN	sprintf(output, "row = %d, col = %d\n", row, col);	SCI0_TxString(output);			qPrint("retval = %d\n\n", retval);	#endif			// if 0, no changes so return	if (retval == 0)		return;			if (retval < 3)	{		ChangeTile(row, col, Board(row,col) & ValueBits, (Board(row,col) & RevealedBit) >> 3);	
+//****************************************************************************// A button was pressed, do something with that information.void ButtonPressed(int row, int col){	char output[30];		// tells the GamePlay file that the user has pressed a button	// this is the only way in which the user will interact with the game itself, and apart from making a newLevel at the 	char retval = TryReveal(row, col);			#ifdef DEBUG_MAIN	sprintf(output, "row = %d, col = %d\n", row, col);	SCI0_TxString(output);			qPrint("retval = %d\n\n", retval);	#endif			// if 0, no changes so return	if (retval == 0)		return;			// only one of the tiles has changed:	if (retval < 3)	{		ChangeTile(row, col, Board(row,col) & ValueBits, (Board(row,col) & RevealedBit) >> 3);	
 		// update level points		sprintf(output, "%9d", *LevelPoints);
-		SSD1306_StringXY(0, pointRow, output);				// indicate the win/lose state		if (retval == 2 && *LevelPoints == 0)				SSD1306_StringXY(0, 7, "You Lost.");			else if (retval == 2 && *LevelPoints > 0)			SSD1306_StringXY(0, 7, "Win!     ");						
-		SSD1306_Render();		return;	}		if (retval == 3)	{		RevealAllTiles();
-		SSD1306_Render();		return;	}		FullNewScreen();}// A button was pressed, do something with that information.void ButtonHeld(int row, int col){	#ifdef DEBUG_MAIN	char output[18];	sprintf(output, "held %d %d", row, col);			SSD1306_StringXY(0,1,output);	Indicator_Tog;	#endif		#ifdef TESTING	RevealAllTiles();		#endif}#ifdef DEBUG_MAINvoid CheckChange(){	char output[50];
+		SSD1306_StringXY(0, pointRow, output);				// indicate the lose state		if (retval == 2 && *LevelPoints == 0)				SSD1306_StringXY(0, 7, "You Lost.");		// indicate the win state		else if (retval == 2 && *LevelPoints > 0)			SSD1306_StringXY(0, 7, "Win!     ");						
+		SSD1306_Render();		return;	}	// End of a level, show the board:	if (retval == 3)	{		RevealAllTiles();
+		SSD1306_Render();		return;	}		// retval == 4, time to clear and reset the screen for a new level.	FullNewScreen();}// A button was pressed, do something with that information.void ButtonHeld(int row, int col){	#ifdef DEBUG_MAIN	char output[18];	sprintf(output, "held %d %d", row, col);			SSD1306_StringXY(0,1,output);	Indicator_Tog;	#endif		#ifdef TESTING	RevealAllTiles();		#endif}#ifdef DEBUG_MAINvoid CheckChange(){	char output[50];
 	//SCI0_TxString("CheckChanged:\n");
 	for (int i = 0; i < 25; i++)	{		// Access via pointers:		//sprintf(output, "Tile *(board + %d) = %d\n", (int)i, (int)*(board + i)); 		//SCI0_TxString(output);				// Access like an array:		sprintf(output, "Tile %d = %d\n", (int)i, board[i]); 		SCI0_TxString(output);	}	sprintf(output, "\ntp = %d, lvl = %d, lvlpts = %d\n\n", *totalPoints, *Level, *LevelPoints);
 	SCI0_TxString(output);}#endifvoid RevealAllTiles(){	for (int i = 0; i < 25; i++) 	{		ChangeTile(i / 5, i % 5, board[i] & ValueBits, 1);	}	SSD1306_Render();}void FullNewScreen(){	char output[50];
@@ -150,7 +154,8 @@ int main(void)
 
 	row++;
 	
-	// make game grid	MakeGrid();	// display the bombs and points for each row/column'	for (int i = 0; i < 5; i++)	{		char rowBombs = 0, colBombs = 0, rowPts = 0, colPts = 0;		for (int j = 0; j < 5; j++)		{			// going through i row: Board(i, j)			rowBombs += (Board(i, j) & ValueBits) == 0;			rowPts += Board(i, j) & ValueBits;			// going through i column: Board(j, i)			colBombs += (Board(j, i) & ValueBits) == 0;			colPts += Board(j, i) & ValueBits;		}		// set for row		DisplayBombLine(rowBombs, i, 5);		DisplayPointSum(rowPts, i, 5);		// set for col		DisplayBombLine(colBombs, 5, i);		DisplayPointSum(colPts, 5, i);	}//	//for (int i = 0; i < 25; i++)	//{		//ChangeTile(i / 5, i % 5, board[i] & ValueBits, (board[i] & RevealedBit) >> 3);	//}	
-	SSD1306_Render();}void StartGame(){	NewLevel();	// display the new level on the OLED	FullNewScreen();		ReassignButtonCallback(&ButtonPressed);}
+	// make game grid	MakeGrid();	// display the bombs and points for each row/column'	for (int i = 0; i < 5; i++)	{		char rowBombs = 0, colBombs = 0, rowPts = 0, colPts = 0;		for (int j = 0; j < 5; j++)		{			// going through i row: Board(i, j)			rowBombs += (Board(i, j) & ValueBits) == 0;			rowPts += Board(i, j) & ValueBits;						// going through i column: Board(j, i)			colBombs += (Board(j, i) & ValueBits) == 0;			colPts += Board(j, i) & ValueBits;		}		// set for row		DisplayBombLine(rowBombs, i, 5);		DisplayPointSum(rowPts, i, 5);		// set for col		DisplayBombLine(colBombs, 5, i);		DisplayPointSum(colPts, 5, i);	}	
+	SSD1306_Render();}// Only called at the beginning of the game (when not in Test mode)// void StartGame(){	//NewLevel();	// display the new level on the OLED	FullNewScreen();		// Reassign the button-press callback so that it actually plays the game.	ReassignButtonCallback(&ButtonPressed);}
 
-void TestGame(){	char output[50];		SCI0_TxString("\nBoard in main.TestGame:\n");		// Display each of the tiles			StartGame();			SCI0_TxString("\nBack to Board in main.TestGame:\n");	}
+// Code used in testing.
+void TestGame(){	char output[50];		SCI0_TxString("\nBoard in main.TestGame:\n");		// Display each of the tiles			//StartGame();	FullNewScreen();			SCI0_TxString("\nBack to Board in main.TestGame:\n");	}

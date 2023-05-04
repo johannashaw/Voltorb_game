@@ -1,8 +1,9 @@
 /*
  * GameUI.h
  *
- * Created: 2023-04-15 5:46:28 PM
- *  Author: Johanna
+ * Created:		2023-04-15 5:46:28 PM
+ *  Author:		Johanna Shaw
+ * Description:	Controls basic UI to be displayed on the OLED screen.
  */ 
 
 

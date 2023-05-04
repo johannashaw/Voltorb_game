@@ -1,8 +1,11 @@
 /*
  * Buttons.h
  *
- * Created: 2023-04-12 10:23:21 PM
- *  Author: Johanna
+ * Created:		2023-04-12 10:23:21 PM
+ * Author:		Johanna Shaw
+ * Description:	This library deals with the setup and implementation of 5x5 button grid.
+  				It uses the two callback functions passed in the ButtonsSetup function to indicate
+  				when a given button has been pressed and held.
  */ 
 
 
@@ -29,8 +32,11 @@
 //****************************************************************************
 
 
-// functions used while testing on breadboard (I'm not setting up 25 switches on a breadboard.
-void ButtonsSetup(void (*PushedCallback)(int, int), void (*HeldCallback)(int, int));
+// Sets up button grid and indicator led,// Stores the two callback functions for later use in CheckButtons.void ButtonsSetup(void (*PushedCallback)(int, int), void (*HeldCallback)(int, int));
+
+// Will call the PushedCallback when pushed, and HeldCallback when held for 10 calls,
+// Both callbacks will be passed the button's row and column 
 void CheckButtons();
 
+// for reassigning the pushed callback function.
 void ReassignButtonCallback(void (*CallbackFunc)(int, int));

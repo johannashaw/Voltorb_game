@@ -1,3 +1,10 @@
+/*
+ * Gameplay.c
+ *
+ * Created: 2023-04-15 8:56:32 PM
+ * Author:	Johanna Shaw
+ */ 
+
 #include <stdio.h>
 #include "Gameplay.h"
 #include "Supplement.h"
@@ -71,16 +78,20 @@ void  Boardinit(char **brd, int **tPts, int **lvl, int **lvlpts)
 // initializations that need to be done for the game
 // give the game the function it needs to use for random number generation
 void  Boardinit()
-//char*  Boardinit(int *tPts, int *lvl, int *lvlpts)
 {
 	totalPoints = 0;
 	Level = 0;
 	LevelPoints = 0;
 	
+	// Initializes the random functions accessed by Supplement.h
 	initRandom();
+	
+	// Makes a new level to start the game.
+	NewLevel();
 }
 
-
+//	*********************************************************************************************
+//		 The following are to pass the gameplay variables to your main function:
 char* GetArray_pt()
 {
 	return board;
@@ -102,26 +113,32 @@ int* GetLevelPoints_pt()
 	return &LevelPoints;
 }
 
-//populate the game
+
+//	*********************************************************************************************
+
+// Populate the game for the Next level.
+// Levels start at 1 and go up to 9. 
+// If the player lost the last level, they will move down a level up until level 1.
+// If the player won the last level, they will move up a level until level 9.
 void NewLevel()
 {
-	//totalPoints = 12;
-	//Level = 34;
-	LevelPoints = 1;
-
+	// local vars:
 	int Spot = 0;
 	char temp = 0;
 	
+	// reset level points
+	LevelPoints = 1;	
+	
 	SCI0_TxString("\n\nGameplay NewLevel\n");
    
-	// player won increment Level up to 9
+	// player won, increment Level (up to 9)
 	if (State == Show_W)
 	{
 		Level++;
 		if (Level > 9)
 			Level = 9;
 	}
-	// player lost, decrement level
+	// player lost, decrement level (down to 1)
 	else
 	{
 		Level--;
@@ -131,12 +148,13 @@ void NewLevel()
 	
 	// Use the level to determine the number of bombs and points
 	char bombs = (Level/6)*10 + !(Level/5) * (Level + 5);
-	char PTs = Level + 5;		// I'm being lazy 
+	
+	// Use the level to determine points to give. A slight random variance or +-1 can be added, but isn't necessary.
+	char PTs = Level + 5;		
 	
 	
-	qPrint("bombs: %d\n", bombs);
-	
-	qPrint("PTs: %d\n\n", PTs);
+	//qPrint("bombs: %d\n", bombs);	
+	//qPrint("PTs: %d\n\n", PTs);
    
 	// Add all the bombs
 	for (Spot = 0; Spot < bombs; Spot++ )
@@ -154,8 +172,6 @@ void NewLevel()
 		board[Spot] = temp + 1;
 		PTs -= temp;
 		
-		//qPrint("temp: %d\n", temp);
-		//qPrint("PTs: %d\n\n", PTs);
 				
 		Spot++;
 	}
@@ -164,16 +180,9 @@ void NewLevel()
 	for (;Spot < 25; Spot++)
 	{
 		board[Spot] = 1;
-		//qPrint("this should be a 1: %d\n", board[Spot]);
 	}
-	//
-	//for (int i = 0; i < 25; i++)
-	//{
-		////board[Spot] |= RevealedBit;
-		//qPrint("%d\n", board[i]);
-	//}
 
-	// Shuffle the array
+	// Shuffle the array using the Fisher-Yates shuffle
 	for (int i = 24; i > 0; i--)
 	{
 		Spot = GetRandomMax(25);
@@ -186,23 +195,6 @@ void NewLevel()
 }
 
 
-
-void ChangeBoard()
-{
-	for (int i = 0 ;i < 25; i++)
-	{
-		board[i] = i+2;// % 4;
-	}
-
-	totalPoints = 12;
-	Level = 34;
-	LevelPoints = 56;
-		#ifdef DEBUG_MAIN
-	SCI0_TxString("\n\nBoard in Gameplay ChangeBoard:\n");	char output[30];
-	for (int i = 0; i < 10; i++)	{		sprintf(output, "Tile *(board + i) %d = %d\t", (int)i, (int)*(board + i)); //(board)[i]);	//*(*board+i));		SCI0_TxString(output);			sprintf(output, "Tile (board + i) %d = %d\n", (int)i, (int)(board + i)); //(board)[i]);	//*(*board+i));		SCI0_TxString(output);	}
-	#endif
-
-}
 
 // takes a value for the row and column and uses them to check what to do next in the game
 // Returns:
@@ -269,8 +261,11 @@ int TryReveal(int row, int col)
 }
 
 
+// Checks if the board is in a win state.
+// returns 1 if win-state, 0 if not.
 char IsWin()
 {
+	// will go through the board, checking if all of the 2/3 point tiles have been revealed. Returns 0 if the have not
 	for (int i = 0; i < 25; i++)
 	{
 		// if the tile is a 2 or 3 and has not been revealed, the game is not over
@@ -281,4 +276,23 @@ char IsWin()
 	
 	// all point tiles have been revealed, game is won, return 1
 	return 1;
+}
+
+
+// Function used in testing
+void ChangeBoard()
+{
+	for (int i = 0 ;i < 25; i++)
+	{
+		board[i] = i+2;// % 4;
+	}
+
+	totalPoints = 12;
+	Level = 34;
+	LevelPoints = 56;
+		#ifdef DEBUG_MAIN
+	SCI0_TxString("\n\nBoard in Gameplay ChangeBoard:\n");	char output[30];
+	for (int i = 0; i < 10; i++)	{		sprintf(output, "Tile *(board + i) %d = %d\t", (int)i, (int)*(board + i)); //(board)[i]);	//*(*board+i));		SCI0_TxString(output);			sprintf(output, "Tile (board + i) %d = %d\n", (int)i, (int)(board + i)); //(board)[i]);	//*(*board+i));		SCI0_TxString(output);	}
+	#endif
+
 }

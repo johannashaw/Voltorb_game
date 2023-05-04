@@ -2,7 +2,7 @@
  * Supplement.c
  *
  * Created: 2023-04-15 8:56:45 PM
- *  Author: Johanna
+ * Author:	Johanna Shaw
  */ 
 #include "Supplement.h"
 #include <avr/io.h>
@@ -16,23 +16,29 @@ static unsigned int addStart = 0;
 // therefore insuring that it will be different each time
 void initRandom()
 {
+	// seed the random generator using the value stored in EEPROM
 	srandom((long)EEPROM_read(addStart) + (((long)EEPROM_read(addStart + 1)) << 8));
+	
+	// rewrite the EEPROM value with a new random number generated using the last seed
 	int temp = (int)random();
 	EEPROM_write(addStart, (char)temp);
 	EEPROM_write(addStart + 1, (char)(temp >> 8));
 }
 
 
+// returns a random integer
 int GetRandom()
 {
 	return random();
 }
 
+// generates a random int up until max (exclusive)
 int GetRandomMax(int max)
 {
 	return random() % max;
 }
 
+// generates a random int from min (inclusive) to max (exclusive)
 int GetRandomMinMax(int min, int max)
 {
 	return random() % (max - min) + min;
