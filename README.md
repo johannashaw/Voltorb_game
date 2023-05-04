@@ -1,5 +1,5 @@
 # Voltorb_game
-A recreation of the Voltorb minigame from Pokemon Soul-Silver
+## A recreation of the Voltorb minigame from Pokemon Soul-Silver
 
 I have chosen to affectionately rename the game Boom-Boom.
 
@@ -24,6 +24,7 @@ Game description:
   
   E.g.:
         * Game with the tiles revealed *
+```
         Level-Points: 36
         ______________________________________________
         |        |        |        |        |        | '
@@ -43,7 +44,7 @@ Game description:
         |________|________|________|________|________|
           '                 '''      '        '
            04       08       02       05       06
-  
+```
   
   
 The user is able to interact with the game through the 5x5 button matrix, pressing a given button will select the corresponding tile in the game.
