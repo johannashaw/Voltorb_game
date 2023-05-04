@@ -4,7 +4,7 @@
  * Created: 2023-04-15 8:56:32 PM
  * Author:	Johanna Shaw
  */ 
-
+ 
 #include <stdio.h>
 #include "Gameplay.h"
 #include "Supplement.h"
@@ -41,7 +41,9 @@ GameState State = Show_W;
 
 //****************************************************************************
 //									Functions:
-//****************************************************************************
+//****************************************************************************
+
+
 /*
 // initializations that need to be done for the game
 // give the game the function it needs to use for random number generation
@@ -65,8 +67,16 @@ void  Boardinit(char **brd, int **tPts, int **lvl, int **lvlpts)
 		board[i] = (char)i;// % 4;
 	}
 	
-	SCI0_TxString("Board in Gameplay Init:\n");	char output[30];
-	for (int i = 0; i < 10; i++)	{		sprintf(output, "Tile *(board + i) %d = %d\t", i, *(board + i));		SCI0_TxString(output);			sprintf(output, "Tile (board + i) %d = %d\n", i, (board + i)); 		SCI0_TxString(output);	}
+	SCI0_TxString("Board in Gameplay Init:\n");
+	char output[30];
+	for (int i = 0; i < 10; i++)
+	{
+		sprintf(output, "Tile *(board + i) %d = %d\t", i, *(board + i));
+		SCI0_TxString(output);	
+
+		sprintf(output, "Tile (board + i) %d = %d\n", i, (board + i)); 
+		SCI0_TxString(output);
+	}
 	// *brd = board;
 	
 	//return;
@@ -290,9 +300,19 @@ void ChangeBoard()
 	totalPoints = 12;
 	Level = 34;
 	LevelPoints = 56;
-		#ifdef DEBUG_MAIN
-	SCI0_TxString("\n\nBoard in Gameplay ChangeBoard:\n");	char output[30];
-	for (int i = 0; i < 10; i++)	{		sprintf(output, "Tile *(board + i) %d = %d\t", (int)i, (int)*(board + i)); //(board)[i]);	//*(*board+i));		SCI0_TxString(output);			sprintf(output, "Tile (board + i) %d = %d\n", (int)i, (int)(board + i)); //(board)[i]);	//*(*board+i));		SCI0_TxString(output);	}
+
+	
+	#ifdef DEBUG_MAIN
+	SCI0_TxString("\n\nBoard in Gameplay ChangeBoard:\n");
+	char output[30];
+	for (int i = 0; i < 10; i++)
+	{
+		sprintf(output, "Tile *(board + i) %d = %d\t", (int)i, (int)*(board + i)); //(board)[i]);	//*(*board+i));
+		SCI0_TxString(output);	
+
+		sprintf(output, "Tile (board + i) %d = %d\n", (int)i, (int)(board + i)); //(board)[i]);	//*(*board+i));
+		SCI0_TxString(output);
+	}
 	#endif
 
 }
