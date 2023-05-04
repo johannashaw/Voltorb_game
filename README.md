@@ -10,20 +10,19 @@ I have chosen to affectionately rename the game Boom-Boom.
 - SSD1306, I2C, timer, atd, and sci libraries were all provided to me by Simon Walker.
 
 
-Game description:
-  The game contains a "game board" filled with 25 tiles, arranged in a 5x5 grid. 
-  Each tile on the grid can contain either a 1, 2, 3, or a bomb.
-  To the right of each row and below each column: 
-    - there will be a line containing between 0 and five "ticks", indicating the amount of bombs in the row/column
-    - below that line there will be a 2-digit number, indicating the sum total of the 1s, 2s, and 3s in the row/column
-    
-  The objective of the game is to select all of the tiles containing a 2 or a 3, while avoiding the bomb tiles. Points 
-  for a given level (Level-Points) are determined by multiplying the numbered tiles together. If you select a bomb, your Level-Points 
-  falls down to 0. Your Level-Points will be added to your Total-Points at the end of each level and then your 
-  Level-Points will be reset to 1. Levels range from 1 to 9 and increase in difficulty.
+## Game description:
+The game contains a "game board" filled with 25 tiles, arranged in a 5x5 grid. 
+Each tile on the grid can contain either a 1, 2, 3, or a bomb.
+To the right of each row and below each column: 
+  - there will be a line containing between 0 and 5 "ticks", indicating the amount of bombs in the row/column
+  - below that line there will be a 2-digit number, indicating the sum total of the 1s, 2s, and 3s in the row/column
+
+The objective of the game is to select all of the tiles containing a 2 or a 3, while avoiding the bomb tiles. Points 
+for a given level (Level-Points) are determined by multiplying the numbered tiles together. If you select a bomb, your Level-Points 
+falls down to 0. Your Level-Points will be added to your Total-Points at the end of each level and then your 
+Level-Points will be reset to 1. Levels range from 1 to 9 and increase in difficulty.
   
-  E.g.:
-        * Game with the tiles revealed *
+E.g.: (Game with the tiles revealed)
 ```
         Level-Points: 36
         ______________________________________________
