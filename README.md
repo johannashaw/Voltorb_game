@@ -1,5 +1,7 @@
+###### NOTE: This is a copy of the README from the main page.
+
 # Voltorb_game
-## A recreation of the Voltorb minigame from Pokemon Soul-Silver
+## A recreation of the Voltorb minigame from Pokemon Soul-Silver in the form of an embedded device that I designed and programmed.
 
 I have chosen to affectionately rename the game Boom-Boom.
 
@@ -7,7 +9,7 @@ I have chosen to affectionately rename the game Boom-Boom.
 
 - The Software component was designed to be used with the ATmega328P-P microchip and the SSD1306 OLED.
 
-- SSD1306, I2C, timer, atd, and sci libraries were all provided to me by Simon Walker.
+- SSD1306, I2C, timer, atd, and sci libraries were all provided to me by my NAIT instructor, Simon Walker.
 
 
 ## Game description:
