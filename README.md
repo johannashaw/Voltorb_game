@@ -1,5 +1,3 @@
-###### NOTE: This is a copy of the README from the main page.
-
 # Voltorb_game
 ## A recreation of the Voltorb minigame from Pokemon Soul-Silver in the form of an embedded device that I designed and programmed.
 
