@@ -18,7 +18,7 @@ To the right of each row and below each column there will be:
   - A second line below that, there will be a 2-digit leading-zero number, indicating the sum total of the point tiles (1s, 2s, and 3s) in the given row/column
 
 
-###Gameplay: 
+### Gameplay: 
 The objective of the game is to reveal all of the tiles containing a 2 or a 3 in each round, while avoiding revealing any the bomb tiles. 
   - The player starts the game at level 1. 
   - Each round begins with all tiles hidden and the player has 1 point.
@@ -35,7 +35,7 @@ The objective of the game is to reveal all of the tiles containing a 2 or a 3 in
   - At the end of each round, the player's Level-Points will be added to their Total-Points and the board resets for the next round.  
   - The levels start at 1 and go up to 9, increasing in difficulty as the palyer moves up in levels.
 
-###User Interface
+### User Interface
 The user is able to interact with the game through the 5x5 button matrix. Pressing a given button will select the corresponding tile in the game.
 Once a tile is selected:
   - If a round is in progress, then it will reveal the tile underneath.
